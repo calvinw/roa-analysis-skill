@@ -5,8 +5,6 @@ targets:
   - gemini
   - opencode
   - crush
-  - name: codex
-    skills:
-      path: /root/.codex/skills
+  - codex
 audit:
   block_threshold: CRITICAL

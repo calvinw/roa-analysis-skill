@@ -12,13 +12,4 @@ fi
 
 skillshare sync
 
-mkdir -p "$HOME/.codex/skills"
-
-for skill_dir in "$WORKSPACE_DIR"/.skillshare/skills/*; do
-  [ -d "$skill_dir" ] || continue
-  skill_name="$(basename "$skill_dir")"
-  ln -sfn "$skill_dir" "$HOME/.codex/skills/$skill_name"
-done
-
-echo "Synced repo skills into $HOME/.codex/skills"
-echo "Restart the Codex session if the skill list was already loaded before this sync."
+echo "Skills synced via skillshare."
