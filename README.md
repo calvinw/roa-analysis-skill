@@ -18,4 +18,4 @@ https://bus-mgmt-databases.mcp.mathplosion.com/mcp-dolt-database/sse
 
 ## Getting started
 
-Open in GitHub Codespaces — all tools and MCP connections are set up automatically.
+Open in GitHub Codespaces — all tools and MCP connections are set up automatically by `.devcontainer/post-create.sh`, including Codex via `codex mcp add`.
