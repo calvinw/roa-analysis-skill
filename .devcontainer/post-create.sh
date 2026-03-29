@@ -14,26 +14,25 @@ curl -fsSL https://raw.githubusercontent.com/runkids/skillshare/main/install.sh 
 skillshare sync
 
 # Skillshare sync creates repo-local targets such as .agents/skills, but Codex
-# discovers user skills from ~/.codex/skills.
-if command -v codex >/dev/null 2>&1; then
-  mkdir -p ~/.codex/skills
-  for skill_dir in "$WORKSPACE_DIR"/.skillshare/skills/*; do
-    [ -d "$skill_dir" ] || continue
-    skill_name="$(basename "$skill_dir")"
-    target="$HOME/.codex/skills/$skill_name"
+# discovers user skills from ~/.codex/skills. Install these symlinks even if the
+# Codex CLI is not present yet; the agent may be installed later.
+mkdir -p ~/.codex/skills
+for skill_dir in "$WORKSPACE_DIR"/.skillshare/skills/*; do
+  [ -d "$skill_dir" ] || continue
+  skill_name="$(basename "$skill_dir")"
+  target="$HOME/.codex/skills/$skill_name"
 
-    if [ -L "$target" ] && [ "$(readlink -f "$target")" = "$(readlink -f "$skill_dir")" ]; then
-      continue
-    fi
+  if [ -L "$target" ] && [ "$(readlink -f "$target")" = "$(readlink -f "$skill_dir")" ]; then
+    continue
+  fi
 
-    if [ -e "$target" ] && [ ! -L "$target" ]; then
-      echo "Skipping Codex skill install for $skill_name; $target already exists and is not a symlink."
-      continue
-    fi
+  if [ -e "$target" ] && [ ! -L "$target" ]; then
+    echo "Skipping Codex skill install for $skill_name; $target already exists and is not a symlink."
+    continue
+  fi
 
-    ln -sfn "$skill_dir" "$target"
-  done
-fi
+  ln -sfn "$skill_dir" "$target"
+done
 
 # ─── MCP Servers ──────────────────────────────────────────────────────────────
 # MCP configs are checked in to the repo:
