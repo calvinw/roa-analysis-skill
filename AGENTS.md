@@ -38,7 +38,16 @@ mcp_mcp_yfinance_10ks_process_financial_data_from_yahoo(company_name="Walmart", 
 mcp_mcp_sec_10ks_process_financial_data_from_sec(company_name="Walmart", year=2024, cik="104169")
 ```
 
-**In Claude Code / other tools:** Use the UI chat interface — tool-specific setup scripts generate the config each tool needs from `configs/mcp-urls.conf`.
+**In Codex / Claude Code / other tools with MCP tools exposed in-session:** Call the MCP tools directly. Do **not** route through `crush` or another CLI wrapper unless the user explicitly asks for that tool.
+
+Examples in Codex:
+```text
+mcp__dolt__read_query(db_string="calvinw/BusMgmtBenchmarks/main", sql="SELECT * FROM company_info")
+mcp__mcp_yfinance_10ks__process_financial_data_from_yahoo(company_name="Walmart", ticker_symbol="WMT")
+mcp__mcp_sec_10ks__process_financial_data_from_sec(company_name="Walmart", year=2024, cik="104169")
+```
+
+**Important:** The presence of MCP URLs in generated config files only means the endpoints are configured. Some CLIs, including `crush`, may still need a separate model/provider login before they can be used as an MCP bridge. If direct MCP tools are available in the session, prefer them.
 
 ---
 
@@ -317,20 +326,9 @@ Later 10-K filings often restate prior-year numbers (e.g., the 2024 10-K contain
 
 ### Crush Commands
 
-**Query the database:**
-```bash
-crush query "SELECT * FROM company_info LIMIT 5" --db calvinw/BusMgmtBenchmarks/main
-```
+These are optional examples for users who are intentionally working inside `crush`. They are **not** the preferred path for Codex agents when direct MCP tools are available.
 
-**Fetch from Yahoo Finance:**
-```bash
-crush fetch yahoo WMT 2024
-```
-
-**Fetch from SEC:**
-```bash
-crush fetch sec 104169 2024
-```
+**Important:** `crush` CLI subcommands and MCP invocation syntax may vary by version and provider setup. Do not assume `crush query` / `crush fetch` wrappers exist. If direct MCP tools are available in the session, use them instead.
 
 ### Git Workflow
 
