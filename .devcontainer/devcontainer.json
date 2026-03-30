@@ -2,7 +2,6 @@
   "name": "Dolt DB Tools",
   "image": "ghcr.io/calvinw/ai-course-devcontainer:latest",
   "postCreateCommand": "bash .devcontainer/post-create.sh",
-  "postStartCommand": "bash scripts/sync-skills.sh",
   "containerEnv": {
     "CLAUDE_CODE_DISABLE_VSCODE_EXTENSION": "1"
   },
