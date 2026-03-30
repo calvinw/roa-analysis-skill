@@ -18,19 +18,10 @@ enabled = true
 command = "/workspaces/bus-mgmt-benchmarks-dolt-db/.codex-tools/supergateway/node_modules/.bin/supergateway"
 args = ["--sse", "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-dolt-database/sse", "--logLevel", "none"]
 
-[mcp_servers.dolt.tools.read_query]
-approval_mode = "approve"
-
 [mcp_servers.mcp-yfinance-10ks]
 command = "/workspaces/bus-mgmt-benchmarks-dolt-db/.codex-tools/supergateway/node_modules/.bin/supergateway"
 args = ["--sse", "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-yfinance-10ks/sse", "--logLevel", "none"]
 
-[mcp_servers.mcp-yfinance-10ks.tools.process_financial_data_from_yahoo]
-approval_mode = "approve"
-
 [mcp_servers.mcp-sec-10ks]
 command = "/workspaces/bus-mgmt-benchmarks-dolt-db/.codex-tools/supergateway/node_modules/.bin/supergateway"
 args = ["--sse", "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-sec-10ks/sse", "--logLevel", "none"]
-
-[mcp_servers.mcp-sec-10ks.tools.process_financial_data_from_sec]
-approval_mode = "approve"
