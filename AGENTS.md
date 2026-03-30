@@ -195,7 +195,6 @@ bash .devcontainer/post-create.sh
 ├── README.md                          # Project overview
 ├── AGENTS.md                          # This file — technical reference
 ├── CLAUDE.md                          # Claude Code behavior rules
-├── CODEX_MCP_NOTES.md                 # Notes on the Codex supergateway bridge
 ├── configs/
 │   ├── mcp-urls.conf                  # ← EDIT THIS to add/change MCP servers
 │   ├── claude/settings.json           # Reference Claude config
