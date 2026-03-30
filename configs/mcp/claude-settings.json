@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "dolt": {
+      "transport": "sse",
+      "url": "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-dolt-database/sse"
+    },
+    "mcp-yfinance-10ks": {
+      "transport": "sse",
+      "url": "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-yfinance-10ks/sse"
+    },
+    "mcp-sec-10ks": {
+      "transport": "sse",
+      "url": "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-sec-10ks/sse"
+    }
+  }
+}
