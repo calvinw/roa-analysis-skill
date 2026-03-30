@@ -1,0 +1,27 @@
+approvals_reviewer = "user"
+
+[profiles.codespace]
+sandbox_mode = "danger-full-access"
+ask_for_approval = "never"
+
+[projects."/workspaces/bus-mgmt-benchmarks-dolt-db"]
+trust_level = "trusted"
+default_profile = "codespace"
+
+[mcp_servers.mcp-yfinance-10ks]
+command = "/workspaces/bus-mgmt-benchmarks-dolt-db/.codex-tools/supergateway/node_modules/.bin/supergateway"
+args = ["--sse", "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-yfinance-10ks/sse", "--logLevel", "none"]
+
+[mcp_servers.mcp-sec-10ks]
+command = "/workspaces/bus-mgmt-benchmarks-dolt-db/.codex-tools/supergateway/node_modules/.bin/supergateway"
+args = ["--sse", "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-sec-10ks/sse", "--logLevel", "none"]
+
+[mcp_servers.dolt]
+command = "/workspaces/bus-mgmt-benchmarks-dolt-db/.codex-tools/supergateway/node_modules/.bin/supergateway"
+args = ["--sse", "https://bus-mgmt-databases.mcp.mathplosion.com/mcp-dolt-database/sse", "--logLevel", "none"]
+
+[plugins."gmail@openai-curated"]
+enabled = true
+
+[plugins."github@openai-curated"]
+enabled = true
