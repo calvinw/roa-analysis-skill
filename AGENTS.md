@@ -54,26 +54,28 @@ All setup scripts read this file. On the next Codespace boot (or after running `
 
 ## Skill
 
-### `/roa-analysis TICKER1 TICKER2 YEAR`
+### `/roa-analysis TICKER1 [TICKER2 ...] YEAR1 [YEAR2 ...]`
 
-**Purpose:** Compare two companies using the DuPont ROA breakdown.
+**Purpose:** Compare one or more companies across one or more years using the DuPont ROA breakdown.
 
 **Full workflow:** See `.skillshare/skills/roa-analysis/SKILL.md`
 
-**Inputs:**
-- `TICKER1`, `TICKER2` — stock tickers (e.g. `WMT`, `M`, `COST`)
-- `YEAR` — fiscal year as stored in the database (e.g. `2024`)
+**Inputs (any order):**
+- Tickers — any token that is not a 4-digit number (e.g. `WMT`, `M`, `COST`)
+- Years — any 4-digit number (e.g. `2023`, `2024`)
 
 **What it does:**
-1. Queries `company_info` for both tickers to get company names
-2. Queries `financials` for both companies for the given year
-3. Calculates: Net Profit Margin % × Asset Turnover = ROA %
-4. Displays a side-by-side financial summary and ROA breakdown table
-5. Interprets results in plain English
+1. Queries `company_info` for all tickers to get company names
+2. Queries `financials` for all companies and all years in one query
+3. Calculates: Net Profit Margin % × Asset Turnover = ROA % for each company × year
+4. Displays per-year side-by-side tables; if multiple years, adds trend summary tables
+5. Interprets results in plain English including trends over time
 
-**Example:**
+**Examples:**
 ```
 /roa-analysis WMT M 2024
+/roa-analysis LULU DG 2022 2023 2024
+/roa-analysis WMT COST TGT 2023 2024
 ```
 
 ### Adding More Skills

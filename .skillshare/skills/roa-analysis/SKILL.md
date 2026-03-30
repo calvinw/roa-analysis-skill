@@ -1,22 +1,34 @@
 ---
 name: roa-analysis
-description: Compare two retail companies side by side using the ROA (Return on Assets) DuPont breakdown — Net Profit Margin % × Asset Turnover = ROA. Queries the Dolt database for both companies and displays a full comparison table with interpretation. Triggered by "/roa-analysis TICKER1 TICKER2 YEAR".
+description: Compare one or more retail companies across one or more years using the ROA (Return on Assets) DuPont breakdown — Net Profit Margin % × Asset Turnover = ROA. Queries the Dolt database and displays comparison tables with interpretation. Triggered by "/roa-analysis TICKER1 [TICKER2 ...] YEAR1 [YEAR2 ...]".
 ---
 
 # roa-analysis
 
-Compare two companies using the DuPont ROA breakdown.
+Compare companies using the DuPont ROA breakdown, across one or more years.
 
 ## Inputs
 
-`/roa-analysis TICKER1 TICKER2 YEAR`
+`/roa-analysis TICKER1 [TICKER2 ...] YEAR1 [YEAR2 ...]`
 
-- `TICKER1`, `TICKER2` — stock tickers of the two companies to compare (e.g. `WMT`, `M`, `COST`)
-- `YEAR` — fiscal year stored in the database (e.g. `2024`)
+Arguments can be given in any order. Any 4-digit number is treated as a year; everything else is treated as a stock ticker.
 
-## Step 1 — Look up both companies
+Examples:
+- `/roa-analysis LULU DG 2024` — two companies, one year
+- `/roa-analysis LULU DG 2022 2023 2024` — two companies, three years
+- `/roa-analysis WMT COST TGT 2023 2024` — three companies, two years
 
-For each ticker, query the database for company metadata:
+## Step 1 — Parse inputs
+
+Split the arguments into two lists:
+- **Tickers** — any token that is NOT a 4-digit number
+- **Years** — any token that IS a 4-digit number
+
+If no tickers or no years are found, tell the user the correct format and stop.
+
+## Step 2 — Look up all companies
+
+For each ticker, query:
 
 ```sql
 SELECT company, display_name, ticker_symbol
@@ -26,14 +38,14 @@ WHERE ticker_symbol = '{TICKER}'
 
 Use `db_string: calvinw/BusMgmtBenchmarks/main`.
 
-If a ticker returns no row, tell the user that company is not in the database and stop.
+If any ticker returns no row, tell the user that company is not in the database and stop.
 
-## Step 2 — Fetch financial data for both companies
+## Step 3 — Fetch financial data
 
-For each company, run:
+For ALL companies and ALL years, fetch data in a single query:
 
 ```sql
-SELECT year, reportDate,
+SELECT company_name, year, reportDate,
        `Net Revenue`,
        `Cost of Goods`,
        `Gross Margin`,
@@ -42,14 +54,16 @@ SELECT year, reportDate,
        `Net Profit`,
        `Total Assets`
 FROM financials
-WHERE company_name = '{company}' AND year = {YEAR}
+WHERE company_name IN ('{company1}', '{company2}', ...)
+  AND year IN ({YEAR1}, {YEAR2}, ...)
+ORDER BY year, company_name
 ```
 
-If no row is returned for a company/year combination, tell the user the data is missing and stop.
+If data is missing for any company/year combination, note it in the output but continue with available data.
 
-## Step 3 — Calculate ROA components
+## Step 4 — Calculate ROA components
 
-For each company compute the following. All percentages should be rounded to two decimal places.
+For each company × year combination, compute:
 
 | Metric | Formula |
 |--------|---------|
@@ -57,39 +71,76 @@ For each company compute the following. All percentages should be rounded to two
 | Asset Turnover | Net Revenue ÷ Total Assets |
 | ROA % | Net Profit Margin % × Asset Turnover |
 
-Note: ROA % = Net Profit ÷ Total Assets × 100 (the DuPont product is equivalent).
+Round all values to two decimal places.
 
-## Step 4 — Display side-by-side comparison table
+## Step 5 — Display tables
 
-Present a clear table with both companies in columns. Use the display_name from company_info for column headers.
+### Layout when there is ONE year
 
-### Financial Summary ($ thousands)
+Show a single side-by-side table with companies as columns (same as the original two-company format).
 
-| Metric | {Company 1} | {Company 2} |
-|--------|------------|------------|
-| Net Revenue | | |
-| Cost of Goods | | |
-| Gross Margin | | |
-| SGA | | |
-| Operating Profit | | |
-| Net Profit | | |
-| Total Assets | | |
+**Financial Summary ($ thousands)**
 
-### ROA Breakdown
+| Metric | {Company 1} | {Company 2} | ... |
+|--------|------------|------------|-----|
+| Net Revenue | | | |
+| Cost of Goods | | | |
+| Gross Margin | | | |
+| SGA | | | |
+| Operating Profit | | | |
+| Net Profit | | | |
+| Total Assets | | | |
 
-| Metric | {Company 1} | {Company 2} |
-|--------|------------|------------|
-| Net Profit Margin % | | |
-| × Asset Turnover | | |
-| = ROA % | | |
+**ROA Breakdown**
 
-## Step 5 — Interpret the results
+| Metric | {Company 1} | {Company 2} | ... |
+|--------|------------|------------|-----|
+| Net Profit Margin % | | | |
+| × Asset Turnover | | | |
+| = ROA % | | | |
 
-After the tables, write a short plain-English interpretation (3–5 sentences) covering:
+### Layout when there are MULTIPLE years
 
-1. Which company has a higher ROA and what that means overall
-2. Which company is more profitable per dollar of sales (higher Net Profit Margin %)
-3. Which company uses its assets more efficiently (higher Asset Turnover)
-4. What the DuPont breakdown reveals about each company's business model — for example, a discount retailer like Walmart typically has low margins but very high asset turnover, while a department store like Macy's may have higher margins but lower turnover
+Show one section per year, each with its own side-by-side table (same format as above). Label each section clearly:
+
+```
+## Fiscal Year {YEAR}
+```
+
+Then, after all the per-year tables, show a **Trend Summary** — one table per ROA metric showing how each company changed over time:
+
+**Net Profit Margin % Over Time**
+
+| Year | {Company 1} | {Company 2} | ... |
+|------|------------|------------|-----|
+| 2022 | | | |
+| 2023 | | | |
+| 2024 | | | |
+
+**Asset Turnover Over Time**
+
+| Year | {Company 1} | {Company 2} | ... |
+|------|------------|------------|-----|
+| 2022 | | | |
+| 2023 | | | |
+| 2024 | | | |
+
+**ROA % Over Time**
+
+| Year | {Company 1} | {Company 2} | ... |
+|------|------------|------------|-----|
+| 2022 | | | |
+| 2023 | | | |
+| 2024 | | | |
+
+## Step 6 — Interpret the results
+
+After the tables, write a plain-English interpretation covering:
+
+1. **Overall winner** — which company has the highest ROA, and what does that mean?
+2. **Margin story** — which company is more profitable per dollar of sales?
+3. **Turnover story** — which company uses its assets more efficiently?
+4. **Trend** (if multiple years) — is either company improving or declining over time? What might explain that?
+5. **Business model insight** — what does the DuPont breakdown reveal about how each company makes money? (e.g. premium margins vs high-volume low-margin)
 
 Keep the interpretation in plain English suitable for a business student with no finance background.

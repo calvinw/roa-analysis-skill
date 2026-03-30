@@ -28,11 +28,14 @@ To add or change MCP servers, edit `configs/mcp-urls.conf` — all tools pick it
 
 | Command | What it does |
 |---------|-------------|
-| `/roa-analysis TICKER1 TICKER2 YEAR` | Compare two companies side by side using the ROA DuPont breakdown |
+| `/roa-analysis TICKER1 [TICKER2 ...] YEAR1 [YEAR2 ...]` | Compare one or more companies across one or more years using the ROA DuPont breakdown |
 
-Example: `/roa-analysis WMT M 2024`
+Examples:
+- `/roa-analysis WMT M 2024` — two companies, one year
+- `/roa-analysis LULU DG 2022 2023 2024` — two companies, three years
+- `/roa-analysis WMT COST TGT 2023 2024` — three companies, two years
 
-The skill queries the Dolt database for both companies, calculates Net Profit Margin % × Asset Turnover = ROA, and displays a side-by-side table with plain-English interpretation.
+The skill queries the Dolt database, calculates Net Profit Margin % × Asset Turnover = ROA for each company and year, and displays side-by-side tables with trend summaries and plain-English interpretation.
 
 ## Getting started
 
