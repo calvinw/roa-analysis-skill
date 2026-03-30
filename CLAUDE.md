@@ -8,25 +8,25 @@ This file provides guidance to Claude Code when working in this repository.
 
 This codespace connects AI tools to a remote MCP (Model Context Protocol) server and provides a skill for comparing companies using the ROA DuPont breakdown. The main task is:
 
-- Running `/roa-analysis` to compare companies' financial performance across years
+- Running `/roa-analysis` to compare two companies' financial performance
 
 ## Running the Skill
 
-### `/roa-analysis TICKER1 [TICKER2 ...] YEAR1 [YEAR2 ...]`
+### `/roa-analysis TICKER1 TICKER2 YEAR`
 
-This skill looks up one or more companies in the database and compares them side by side using the ROA (Return on Assets) breakdown, across one or more fiscal years. ROA is split into two components:
+This skill looks up two companies in the database and compares them side by side using the ROA (Return on Assets) breakdown. ROA is split into two components:
 
 - **Net Profit Margin %** — how much profit a company makes for every dollar of sales
 - **Asset Turnover** — how efficiently a company uses its assets to generate sales
 
 Multiply them together and you get **ROA %** — a single number that shows how effectively a company turns its assets into profit.
 
-**How to run it:** Type `/roa-analysis` followed by any stock tickers and any fiscal years (in any order).
+**How to run it:** Type `/roa-analysis` followed by two stock tickers and a fiscal year.
 
 Examples:
 - `/roa-analysis WMT M 2024` — compares Walmart and Macy's for fiscal year 2024
-- `/roa-analysis LULU DG 2022 2023 2024` — compares Lululemon and Dollar General across three years
-- `/roa-analysis WMT COST TGT 2023 2024` — compares three companies across two years
+- `/roa-analysis COST TGT 2023` — compares Costco and Target for fiscal year 2023
+- `/roa-analysis WMT COST 2024` — compares Walmart and Costco for fiscal year 2024
 
 ---
 
