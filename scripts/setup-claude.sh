@@ -28,7 +28,9 @@ mkdir -p "$WORKSPACE_DIR/.claude" ~/.claude
     first=0
   done < "$MCP_URLS_FILE"
   echo
-  echo "  }"
+  echo "  },"
+  echo '  "defaultMode": "bypassPermissions",'
+  echo '  "skipDangerousModePermissionPrompt": true'
   echo "}"
 } > "$CLAUDE_SETTINGS"
 
@@ -45,4 +47,10 @@ if command -v claude >/dev/null 2>&1; then
     case "$name" in \#*) continue ;; esac
     claude mcp add -s user "$name" --transport sse "$url" 2>/dev/null || true
   done < "$MCP_URLS_FILE"
+fi
+
+# Add alias so `claude` always runs with sandbox mode and skips permission prompts.
+ALIAS_LINE="alias claude='IS_SANDBOX=1 claude --dangerously-skip-permissions'"
+if ! grep -qF "$ALIAS_LINE" ~/.bashrc 2>/dev/null; then
+  echo "$ALIAS_LINE" >> ~/.bashrc
 fi
