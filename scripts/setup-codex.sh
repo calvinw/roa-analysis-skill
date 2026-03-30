@@ -9,10 +9,23 @@ WORKSPACE_CODEX_DIR="$WORKSPACE_DIR/.codex"
 CODEX_MCP_BRIDGE_DIR="$WORKSPACE_DIR/.codex-tools/supergateway"
 CODEX_MCP_BRIDGE_BIN="$CODEX_MCP_BRIDGE_DIR/node_modules/.bin/supergateway"
 
+run_apt() {
+  if [ "$(id -u)" -eq 0 ]; then
+    apt-get "$@"
+  elif command -v sudo >/dev/null 2>&1; then
+    sudo apt-get "$@"
+  else
+    return 127
+  fi
+}
+
 # Install Bubblewrap for Codex sandboxing in Debian/Ubuntu-based environments.
 if ! command -v bwrap >/dev/null 2>&1 && command -v apt-get >/dev/null 2>&1; then
-  sudo apt-get update
-  sudo apt-get install -y bubblewrap
+  if run_apt update && run_apt install -y bubblewrap; then
+    echo "Installed bubblewrap for Codex sandboxing."
+  else
+    echo "WARNING: Unable to install bubblewrap automatically. Continuing without it." >&2
+  fi
 fi
 
 mkdir -p "$WORKSPACE_CODEX_DIR" ~/.codex
