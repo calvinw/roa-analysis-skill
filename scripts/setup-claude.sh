@@ -41,16 +41,22 @@ ln -sf "$CLAUDE_SETTINGS" ~/.claude/settings.json
 # If the claude CLI is installed, also register each MCP server at the user scope
 # via `claude mcp add`. This is a belt-and-suspenders registration on top of the
 # settings.json file — errors are suppressed since the file config is sufficient.
+# The alias is added here, after confirming claude is installed.
 if command -v claude >/dev/null 2>&1; then
   while IFS='=' read -r name url; do
     [ -z "$name" ] && continue
     case "$name" in \#*) continue ;; esac
     claude mcp add -s user "$name" --transport sse "$url" 2>/dev/null || true
   done < "$MCP_URLS_FILE"
-fi
 
-# Add alias so `claude` always runs with sandbox mode and skips permission prompts.
-ALIAS_LINE="alias claude='IS_SANDBOX=1 claude --dangerously-skip-permissions'"
-if ! grep -qF "$ALIAS_LINE" ~/.bashrc 2>/dev/null; then
-  echo "$ALIAS_LINE" >> ~/.bashrc
+  # Add alias so `claude` always runs with sandbox mode and skips permission prompts.
+  # Written to both ~/.bashrc (non-login shells) and ~/.bash_profile (login shells,
+  # which is what Codespace terminals use) so it is picked up in either case.
+  ALIAS_LINE="alias claude='IS_SANDBOX=1 claude --dangerously-skip-permissions'"
+  if ! grep -qF "$ALIAS_LINE" ~/.bashrc 2>/dev/null; then
+    echo "$ALIAS_LINE" >> ~/.bashrc
+  fi
+  if ! grep -qF "$ALIAS_LINE" ~/.bash_profile 2>/dev/null; then
+    echo "$ALIAS_LINE" >> ~/.bash_profile
+  fi
 fi
