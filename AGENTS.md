@@ -187,8 +187,10 @@ See `.claude/skills/analyze-financials/references/company-notes.md` for per-comp
 ├── AGENTS.md                          # This file
 ├── .crush.json                        # Crush MCP config
 ├── configs/
+│   ├── codex/
+│   │   └── config.toml                # Source-of-truth Codex config
 │   └── mcp/                           # Source-of-truth MCP config files
-│       ├── claude-settings.json       # Claude Code & Codex MCP config
+│       ├── claude-settings.json       # Claude Code & Codex MCP endpoint config
 │       ├── copilot-mcp-config.json    # GitHub Copilot MCP config
 │       ├── gemini-settings.json       # Gemini CLI MCP config
 │       └── opencode.json              # OpenCode MCP config
@@ -348,7 +350,8 @@ On boot, the `.devcontainer/post-create.sh` script:
 1. Installs Skillshare (cross-tool skill sharing)
 2. Configures MCP servers for all AI tools
 3. Symlinks MCP configs to tool-specific directories
-4. Registers Claude and Codex MCP servers from `configs/mcp/claude-settings.json`
+4. Links Codex config from `configs/codex/config.toml`
+5. Registers Claude and Codex MCP servers from `configs/mcp/claude-settings.json`
 
 To manually re-run setup:
 ```bash
@@ -393,9 +396,10 @@ WHERE company_name = 'Walmart' AND year = 2024
 - **`.claude/skills/analyze-financials/references/anomaly-rules.md`** — All SGA rules, balance sheet checks, restatement logic
 - **`.claude/skills/analyze-financials/references/company-notes.md`** — Per-company patterns and quirks
 - **`.claude/skills/insert-financials/SKILL.md`** — Complete step-by-step insert-financials workflow
-- **`.devcontainer/post-create.sh`** — MCP setup and Skillshare configuration
+- **`.devcontainer/post-create.sh`** — Environment, Codex config, MCP setup, and Skillshare configuration
 - **`.crush.json`** — MCP server URLs for Crush
 - **`configs/mcp/claude-settings.json`** — MCP server URLs for Claude Code and Codex
+- **`configs/codex/config.toml`** — Source-of-truth Codex CLI configuration
 - **`configs/mcp/`** — Source-of-truth MCP configs for all tools (Copilot, OpenCode, Gemini)
 
 ---

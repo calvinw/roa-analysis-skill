@@ -9,7 +9,6 @@ cd "$WORKSPACE_DIR"
 CONFIGS="$WORKSPACE_DIR/configs/mcp"
 CODEX_MCP_BRIDGE_DIR="$WORKSPACE_DIR/.codex-tools/supergateway"
 CODEX_MCP_BRIDGE_BIN="$CODEX_MCP_BRIDGE_DIR/node_modules/.bin/supergateway"
-CODEX_CONFIG_SRC="$WORKSPACE_DIR/.codex/config.toml"
 
 # ─── Create workspace tool dirs and symlink MCP configs into them ─────────────
 # Source-of-truth configs live in configs/mcp/; these dirs are generated at
@@ -19,8 +18,7 @@ mkdir -p \
   "$WORKSPACE_DIR/.copilot" \
   "$WORKSPACE_DIR/.opencode" \
   "$WORKSPACE_DIR/.gemini" \
-  "$WORKSPACE_DIR/.claude" \
-  "$WORKSPACE_DIR/.codex"
+  "$WORKSPACE_DIR/.claude"
 
 ln -sf "$CONFIGS/copilot-mcp-config.json" "$WORKSPACE_DIR/.copilot/mcp-config.json"
 ln -sf "$CONFIGS/opencode.json"           "$WORKSPACE_DIR/.opencode/opencode.json"
@@ -36,26 +34,6 @@ ln -sf "$WORKSPACE_DIR/.opencode/opencode.json"     ~/.config/opencode/opencode.
 ln -sf "$WORKSPACE_DIR/.gemini/settings.json"       ~/.gemini/settings.json
 ln -sf "$WORKSPACE_DIR/.crush.json"                 ~/.config/crush/crush.json
 
-# Keep Codex settings in the repo so Codespaces can bootstrap a consistent
-# teaching environment before MCP servers are registered.
-mkdir -p ~/.codex
-if [ -f "$CODEX_CONFIG_SRC" ]; then
-  ln -sf "$CODEX_CONFIG_SRC" ~/.codex/config.toml
-fi
-
-if [ -f ~/.codex/config.toml ]; then
-  echo "Codex config linked: ~/.codex/config.toml -> $(readlink -f ~/.codex/config.toml)"
-  if grep -q 'default_profile = "codespace"' ~/.codex/config.toml && \
-     grep -q 'sandbox_mode = "danger-full-access"' ~/.codex/config.toml && \
-     grep -q 'ask_for_approval = "never"' ~/.codex/config.toml; then
-    echo "Codex default profile verified: codespace (danger-full-access, ask_for_approval=never)"
-  else
-    echo "WARNING: Codex config found, but the expected codespace profile defaults were not detected."
-  fi
-else
-  echo "WARNING: ~/.codex/config.toml was not created."
-fi
-
 # Register Claude Code MCP servers from configs/mcp/claude-settings.json into ~/.claude.json
 if command -v jq >/dev/null 2>&1 && command -v claude >/dev/null 2>&1; then
   SETTINGS="$CONFIGS/claude-settings.json"
@@ -67,7 +45,7 @@ if command -v jq >/dev/null 2>&1 && command -v claude >/dev/null 2>&1; then
   fi
 fi
 
-# Register Codex MCP servers from configs/mcp/claude-settings.json into ~/.codex/config.toml.
+# Register Codex MCP servers from configs/mcp/claude-settings.json.
 # These MCP servers expose legacy SSE endpoints; current Codex CLI `--url` support
 # is streamable HTTP only, so register them through a pinned local Supergateway
 # install as stdio servers rather than relying on transient `npx` caches.

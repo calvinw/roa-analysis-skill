@@ -8,4 +8,5 @@ cd "$WORKSPACE_DIR"
 
 bash "$WORKSPACE_DIR/scripts/setup-env.sh"
 bash "$WORKSPACE_DIR/scripts/sync-skills.sh"
+bash "$WORKSPACE_DIR/scripts/setup-codex.sh"
 bash "$WORKSPACE_DIR/scripts/setup-mcps.sh"
