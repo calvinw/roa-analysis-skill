@@ -1,13 +1,16 @@
 #!/bin/bash
 set -e
 
+# Resolve paths relative to this script's location, regardless of where it's called from.
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_DIR="${WORKSPACE_DIR:-$(cd -- "$SCRIPT_DIR/.." && pwd)}"
-MCP_URLS_FILE="$WORKSPACE_DIR/configs/mcp-urls.conf"
-CLAUDE_SETTINGS="$WORKSPACE_DIR/.claude/settings.json"
+MCP_URLS_FILE="$WORKSPACE_DIR/configs/mcp-urls.conf"       # Source of truth: one name=url per line
+CLAUDE_SETTINGS="$WORKSPACE_DIR/.claude/settings.json"     # Generated config written here
 
 mkdir -p "$WORKSPACE_DIR/.claude" ~/.claude
 
+# Build .claude/settings.json by reading each name=url entry from mcp-urls.conf.
+# Lines starting with # are skipped. The result is a JSON mcpServers block using SSE transport.
 {
   echo "{"
   echo '  "mcpServers": {'
@@ -29,8 +32,13 @@ mkdir -p "$WORKSPACE_DIR/.claude" ~/.claude
   echo "}"
 } > "$CLAUDE_SETTINGS"
 
+# Symlink the workspace settings file into the user's home directory so Claude Code
+# picks it up regardless of which directory it's launched from.
 ln -sf "$CLAUDE_SETTINGS" ~/.claude/settings.json
 
+# If the claude CLI is installed, also register each MCP server at the user scope
+# via `claude mcp add`. This is a belt-and-suspenders registration on top of the
+# settings.json file — errors are suppressed since the file config is sufficient.
 if command -v claude >/dev/null 2>&1; then
   while IFS='=' read -r name url; do
     [ -z "$name" ] && continue
