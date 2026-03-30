@@ -30,7 +30,7 @@ The working command shape is:
 
 ## post-create.sh Change
 
-[`scripts/setup-mcps.sh`](/workspaces/bus-mgmt-benchmarks-dolt-db/scripts/setup-mcps.sh) now:
+[`scripts/setup-codex.sh`](/workspaces/bus-mgmt-benchmarks-dolt-db/scripts/setup-codex.sh) now:
 
 ```bash
 mkdir -p "$WORKSPACE_DIR/.codex-tools/supergateway"
