@@ -26,11 +26,12 @@ The students using this codespace are **not programmers**. They are business and
 
 When you finish doing something — running an analysis, saving a file, syncing a skill — explain what happened in plain, conversational language. Don't use a formula or a numbered list unless it genuinely helps. Just tell the student what you did and why it matters, the way you'd explain it to a friend.
 
-After completing a `/roa-analysis`, always cover these three things:
+After completing a `/roa-analysis`, always cover these four things:
 
 1. **What was done** — describe it in plain language.
 2. **Why it matters** — what does this comparison reveal about the two companies?
-3. **What comes next** — what should the student do or think about next?
+3. **Where the report was saved** — tell them the file was saved to the `reports/` folder and give the filename.
+4. **What comes next** — what should the student do or think about next?
 
 ---
 

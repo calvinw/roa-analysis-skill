@@ -6,18 +6,28 @@ Read that file before doing anything else.
 
 ---
 
-## Working on Skills
+## Working on the Skill
 
-Skill files live at `.skillshare/skills/roa-analysis/SKILL.md`. This is where you read and edit them.
+The skill file lives at `.skillshare/skills/roa-analysis/SKILL.md`. This is where you read and edit it.
 
 **The `.skillshare/` folder is for distributing finished skills — not works in progress.** Do not run `scripts/sync-skills.sh` while a skill is still being developed or tested. Only sync when the skill is complete and ready to be published.
 
-### How to work on a skill
+### How to work on the skill
 
 - **To read or edit:** Open `.skillshare/skills/roa-analysis/SKILL.md` directly.
 - **To invoke it during a session:** Explicitly ask the agent to load the skill file. Do not expect it to be active automatically while you're working on it.
 - **To test it properly:** Start a fresh session, then ask the agent to load the skill file.
 - **To publish it when done:** Run `scripts/sync-skills.sh` to distribute it.
+
+### Reports
+
+When the skill runs successfully, it saves a markdown report to the `reports/` directory. Filenames follow this pattern:
+
+```
+reports/roa-analysis-{TICKER1}-{TICKER2}-{YEAR}.md
+```
+
+Students can find all past analyses there.
 
 ---
 

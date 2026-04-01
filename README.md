@@ -1,49 +1,49 @@
-# ai-codespace-skill-and-mcp
+# ROA Analysis Skill
 
-A GitHub Codespace template that wires up a remote MCP server and a custom skill across every major AI coding tool — Claude Code, OpenCode, Gemini CLI, Codex, Copilot, and Crush.
+A GitHub Codespace for business and retail management students to compare companies using the ROA (Return on Assets) DuPont breakdown.
 
-## What this does
+## What This Does
 
-When you open this Codespace, all AI tools are automatically configured to connect to a shared MCP (Model Context Protocol) server. A single skill is pre-loaded that any tool can run with a slash command.
+Run a single command and get a side-by-side financial comparison of two retail companies — including Net Profit Margin %, Asset Turnover, and ROA % — pulled live from a shared database, with a plain-English interpretation written for business students.
 
-This is a minimal, working example of the pattern. Swap in your own MCP URL and write your own skill to build on top of it.
-
-## AI Tools
-
-All tools are pre-installed and pre-configured:
-Claude Code, OpenCode, Gemini CLI, Codex, Copilot, Crush
-(from [ai-course-devcontainer](https://github.com/calvinw/ai-course-devcontainer))
-
-## MCP Server
-
-| Server | Purpose |
-|--------|---------|
-| **dolt** | Read/write the BusMgmtBenchmarks Dolt database |
-
-Endpoint: `https://bus-mgmt-databases.mcp.mathplosion.com/mcp-dolt-database/sse`
-
-To add or change MCP servers, edit `configs/mcp-urls.conf` — all tools pick it up automatically on next boot.
-
-## Skill
+## The Skill
 
 | Command | What it does |
 |---------|-------------|
 | `/roa-analysis TICKER1 TICKER2 YEAR` | Compare two companies side by side using the ROA DuPont breakdown |
 
-Example: `/roa-analysis WMT M 2024`
+**Examples:**
+- `/roa-analysis WMT M 2024` — Walmart vs Macy's, fiscal year 2024
+- `/roa-analysis COST TGT 2023` — Costco vs Target, fiscal year 2023
+- `/roa-analysis WMT COST 2024` — Walmart vs Costco, fiscal year 2024
 
-The skill queries the Dolt database for both companies, calculates Net Profit Margin % × Asset Turnover = ROA, and displays a side-by-side table with plain-English interpretation.
+The skill queries the database for both companies, builds a financial summary table, calculates the DuPont components, and writes a plain-English interpretation of what the numbers reveal about each company's business model.
 
-## Getting started
+Reports are automatically saved to the `reports/` folder.
 
-Open in GitHub Codespaces — all tools and MCP connections are set up automatically by `.devcontainer/post-create.sh`.
+## The ROA Breakdown
 
-## Customizing
+ROA (Return on Assets) is calculated as:
 
-- **Add an MCP server:** Add a line to `configs/mcp-urls.conf` in `name=url` format
-- **Add a skill:** Create a folder under `.skillshare/skills/` with a `SKILL.md` file
+**Net Profit Margin % × Asset Turnover = ROA %**
+
+- **Net Profit Margin %** — for every dollar of sales, how many cents does the company keep as profit?
+- **Asset Turnover** — for every dollar of assets the company owns, how many dollars of sales does it generate?
+- **ROA %** — how effectively does the company turn what it owns into profit?
+
+Two companies can reach the same ROA through very different strategies. Walmart runs on thin margins and massive sales volume. A specialty retailer might have higher margins but slower turnover. The DuPont breakdown shows you which path each company is taking.
+
+## Getting Started
+
+Open in GitHub Codespaces — everything is set up automatically. Then open Claude Code and type:
+
+```
+/roa-analysis WMT M 2024
+```
 
 ## Documentation
 
-- [AGENTS.md](AGENTS.md) — Technical reference: how MCP setup works, file layout, how to add MCPs and skills
-- [CLAUDE.md](CLAUDE.md) — Claude Code behavior rules and skill usage guide
+- [AGENTS.md](AGENTS.md) — How the skill works, database schema, and how to edit or test the skill
+- [CLAUDE.md](CLAUDE.md) — Claude Code behavior rules and how to explain ROA to students
+- [SkillEditor.md](SkillEditor.md) — Role instructions for editing the skill file
+- [SkillTester.md](SkillTester.md) — Role instructions for testing skill changes
